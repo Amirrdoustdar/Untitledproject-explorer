@@ -1,56 +1,76 @@
 # File Explorer Tool
 
-A Python-based utility for exploring directories and counting files based on their extensions. This tool is interactive, user-friendly, and supports progress feedback during the directory traversal.
+A Python-based utility for exploring directories, filtering files, and generating reports. This tool combines user-friendliness with advanced features, making it suitable for beginners and power users alike.
+
+---
 
 ## Features
 
-- **Search by File Extension:** Search for single or multiple file types.
-- **Progress Feedback:** Displays a progress bar while exploring directories using `tqdm`.
-- **Error Handling:** Ensures graceful handling of invalid inputs or inaccessible directories.
-- **Formatted Results:** Presents file counts in a clean, tabular format.
+### Core Features
+- **Search by File Extension**: Look for single or multiple file types.
+- **Interactive Mode**: Allows users to input folder paths and file extensions dynamically.
+- **Progress Feedback**: Displays a progress bar using `tqdm` during directory traversal.
+- **Error Handling**: Handles invalid inputs and inaccessible directories gracefully.
+- **Formatted Results**: Presents file counts in a clean, tabular format.
+
+### Advanced Features
+- **Detailed Logging**: Logs activities and errors for auditing and debugging.
+- **Flexible Filters**:
+  - File size range (e.g., min/max size).
+  - Modification date range.
+  - Writable or executable file filters.
+  - Keyword search within file contents.
+- **Comprehensive Reporting**:
+  - Export results to CSV, JSON, or Excel.
+  - Compress reports into ZIP files for easy sharing.
+
+---
 
 ## How It Works
 
-1. **User Input:**
-   - Enter the folder path to explore.
-   - Provide one or more file extensions to search for, separated by commas (e.g., `txt, py, csv`).
+### User Input
+1. Enter the folder path to explore.
+2. Provide one or more file extensions to search for (e.g., `py, txt, csv`).
+3. Optionally specify filters like name patterns, size limits, or date ranges.
 
-2. **Directory Traversal:**
-   - The script scans the specified folder and its subdirectories.
-   - Counts files that match the given extensions.
+### Directory Traversal
+- The script scans the specified folder and its subdirectories.
+- Counts files that match the provided filters and extensions.
 
-3. **Output:**
-   - Displays a table with relative directory paths and file counts.
+### Output
+- Displays results in a table with relative directory paths, file counts, and sizes.
+- Generates detailed reports for further analysis.
+
+---
 
 ## Usage
 
 ### Requirements
-
 - Python 3.x
-- `tqdm` library (Install using `pip install tqdm`)
+- Libraries: Install dependencies using:
+  ```bash
+  pip install pandas tqdm openpyxl
+  ```
 
 ### Running the Script
-
-1. Save the script as `file_explorer.py`.
+1. Save the script as `Explorer.py`.
 2. Open a terminal or command prompt.
 3. Run the script with:
    ```bash
-   python file_explorer.py
+   python Explorer.py
    ```
-4. Follow the on-screen prompts:
-   - Enter the folder path.
-   - Specify the file extensions to search for.
+4. Follow the on-screen prompts for interactive mode, or customize the `main` function for predefined inputs.
 
 ### Example
 
 #### Input:
-```
+```plaintext
 Enter the folder path to explore: /path/to/directory
 Enter the file extensions to search for (comma-separated): py, txt
 ```
 
 #### Output:
-```
+```plaintext
 Directory                                             | Count
 ------------------------------------------------------------
 /path/to/directory                                    | 3    
@@ -58,33 +78,68 @@ Directory                                             | Count
 /path/to/directory/subdir2                           | 2    
 ```
 
+---
+
+## Advanced Example with Filters
+
+```python
+from datetime import datetime
+
+results = explore(
+    extension=None,
+    folder_path="/path/to/folder",
+    multiple_extensions=[".py", ".txt"],
+    name_pattern="*example*",
+    start_date=datetime(2023, 1, 1),
+    end_date=datetime(2023, 12, 31),
+    min_size=1024,  # Minimum 1KB
+    max_size=1048576,  # Maximum 1MB
+    depth=2,
+    writable=False,
+    executable=False
+)
+
+# Generate reports
+generate_report(results, report_file="report.csv", format="csv")
+compress_report("report.csv", "report.zip")
+```
+
+---
+
 ## Code Overview
 
 ### Key Functions
 
-1. **`explore(extensions, folder_path)`**
-   - Traverses the folder structure.
-   - Counts files matching the specified extensions.
-   - Returns a dictionary of relative paths and file counts.
+- `explore(extension, folder_path, ...)`: Traverses directories and filters files based on criteria.
+- `generate_report(data, report_file, format)`: Creates reports in CSV, JSON, or Excel formats.
+- `compress_report(report_file, zip_file)`: Compresses report files into ZIP format.
+- `log_activity(action, details)`: Logs actions and errors to a JSON file.
 
-2. **`print_results(results)`**
-   - Prints the results in a tabular format.
-
-3. **`main()`**
-   - Handles user input and calls the required functions.
-   - Provides error handling for invalid inputs or inaccessible directories.
-
-## Customization
-
-- Modify the script to save results to a file (e.g., CSV or JSON).
-- Add support for case-insensitive extension matching (already included).
-- Extend functionality to filter by file size or modification date.
-
-## License
-
-This project is licensed under the MIT License. You are free to use, modify, and distribute this tool as per the license terms.
+### Main Function
+- Handles user inputs and calls the necessary functions.
+- Provides error handling and feedback during execution.
 
 ---
 
-Feel free to contribute or suggest improvements!
+## Customization
+- Save results to additional formats like YAML or plain text.
+- Extend filters to include file owners or permissions.
+- Enhance reporting to include visual charts or graphs.
+
+---
+
+## Testing
+- Unit tests are included to validate core functionality:
+  ```bash
+  python -m unittest Explorer.py
+  ```
+
+---
+
+## License
+This project is licensed under the MIT License. Feel free to use, modify, and distribute this tool as per the license terms.
+
+---
+
+Contributions and feedback are welcome! Submit issues or pull requests to help improve this tool.
 
